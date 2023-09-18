@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Photo Upload and Resize</title>
+    <style>
+        /* Style the form */
+        .form {
+            margin: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        /* Style the input element */
+        .input {
+            display: block;
+            margin: 10px;
+        }
+
+        /* Style the image element */
+        .image {
+            max-width: 500px;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Photo Upload and Resize</h1>
+    <form class="form" action="upload.php" method="post" enctype="multipart/form-data">
+        <label for="file">Select a photo to upload:</label>
+        <input class="input" type="file" id="file" name="file" accept="image/*">
+        <input class="input" type="submit" value="Upload Photo" name="submit">
+    </form>
+    <div id="result"></div>
+    <script>
+        // Get the form element
+        var form = document.querySelector(".form");
+
+        // Add an event listener to the form submit event
+        form.addEventListener("submit", function(event) {
+            // Prevent the default form submission behavior
+            event.preventDefault();
+
+            // Get the file input element
+            var fileInput = document.querySelector("#file");
+
+            // Get the selected file
+            var file = fileInput.files[0];
+
+            // Check if the file is an image
+            if (file && file.type.startsWith("image/")) {
+                // Create a FileReader object
+                var reader = new FileReader();
+
+                // Add an event listener to the load event
+                reader.addEventListener("load", function() {
+                    // Get the result of the reader as a data URL
+                    var dataURL = reader.result;
+
+                    // Create an image element
+                    var image = document.createElement("img");
+
+                    // Set the src attribute of the image to the data URL
+                    image.src = dataURL;
+
+                    // Set the class attribute of the image to "image"
+                    image.className = "image";
+
+                    // Add an event listener to the load event of the image
+                    image.addEventListener("load", function() {
+                        // Get the width and height of the image
+                        var width = image.width;
+                        var height = image.height;
+
+                        // Calculate the ratio of the width and height
+                        var ratio = width / height;
+
+                        // Set the target width and height to 113 pixels
+                        var targetWidth = 113;
+                        var targetHeight = 113;
+
+                        // Adjust the width or height if the ratio is not equal
+                        if (ratio > 1) {
+                            targetHeight = targetWidth / ratio;
+                        } else if (ratio < 1) {
+                            targetWidth = targetHeight * ratio;
+                        }
+
+                        // Create a canvas element
+                        var canvas = document.createElement("canvas");
+
+                        // Get the context of the canvas
+                        var context = canvas.getContext("2d");
+
+                        // Set the width and height of the canvas to the target values
+                        canvas.width = targetWidth;
+                        canvas.height = targetHeight;
+
+                        // Draw the image on the canvas with the target size
+                        context.drawImage(image, 0, 0, targetWidth, targetHeight);
+
+                        // Get the data URL of the canvas as a JPEG image
+                        var resizedDataURL = canvas.toDataURL("image/jpeg");
+
+                        // Create a link element
+                        var link = document.createElement("a");
+
+                        // Set the href attribute of the link to the resized data URL
+                        link.href = resizedDataURL;
+
+                        // Set the download attribute of the link to "resized.jpg"
+                        link.download = "resized.jpg";
+
+                        // Set the text content of the link to "Download Resized Photo"
+                        link.textContent = "Download Resized Photo";
+
+                        // Set the class attribute of the link to "input"
+                        link.className = "input";
+
+                        // Get the result div element
+                        var result = document.querySelector("#result");
+
+                        // Clear any previous content in the result div
+                        result.innerHTML = "";
+
+                        // Append the image and the link to the result div
+                        result.appendChild(image);
+                        result.appendChild(link);
+                    });
+                });
+
+                // Read the file as a data URL
+                reader.readAsDataURL(file);
+            } else {
+                // Display an error message if the file is not an image
+                alert("Please select an image file.");
+            }
+        });
+    </script>
+</html>
