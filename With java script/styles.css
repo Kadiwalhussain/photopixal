@@ -1,0 +1,28 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+#uploadForm {
+    margin: 20px;
+}
+
+#photoInput {
+    margin-right: 10px;
+}
+
+#resizeButton {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+#result {
+    margin-top: 20px;
+}
