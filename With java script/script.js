@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const file = photoInput.files[0];
             const formData = new FormData();
             formData.append("photo", file);
-
+up
             fetch("resize.php", {
                 method: "POST",
                 body: formData,
